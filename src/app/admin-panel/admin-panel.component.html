@@ -3,10 +3,29 @@
 <div class="container" [class.dark-mode]="darkModeActive()">
     <!-- Header -->
     <header class="seamless-header">
-        <div class="logo-search">
+        <div class="header-left">
             <div class="logo">
                 <img src="assets/logo.webp" alt="Institute Logo" class="institute-logo" title="Institute Logo">
             </div>
+            <span class="brand-name">Quenrix</span>
+        </div>
+
+        <nav class="top-nav desktop-nav">
+            <a *ngFor="let link of config.SIDEBAR_LINKS"
+               class="top-nav-item"
+               [class.active]="activeTab() === link.id"
+               (click)="navigateTo(link.route, link.id)"
+               [title]="link.label">
+                <i [class]="link.icon"></i>
+                <span>{{ link.label }}</span>
+            </a>
+        </nav>
+
+        <div class="header-right">
+            <button class="menu-toggle-btn" (click)="toggleMobileMenu()" [attr.aria-label]="mobileMenuOpen() ? 'Close menu' : 'Open menu'" title="Menu">
+                <i class="fas" [class.fa-bars]="!mobileMenuOpen()" [class.fa-times]="mobileMenuOpen()"></i>
+            </button>
+
             <div class="search-wrapper modern-search">
                 <i class="fas fa-search search-icon"></i>
                 <input 
@@ -16,38 +35,42 @@
                     (input)="onHeaderSearch($event)"
                 />
             </div>
-        </div>
-        <div class="header-right">
             <div class="user-profile-pill" title="{{ config.ADMIN_DETAILS.name }}">
                 <div class="user-avatar">
                     <img [src]="config.ADMIN_DETAILS.profileUrl" alt="Admin">
                 </div>
                 <span class="user-name">{{ config.ADMIN_DETAILS.name }}</span>
             </div>
-        </div>
-    </header>
 
-    <!-- Sidebar -->
-    <aside class="sidebar seamless-sidebar">
-        <nav class="sidebar-nav">
-            <a *ngFor="let link of config.SIDEBAR_LINKS"
-               class="nav-item"
-               [class.active]="activeTab() === link.id" 
-               (click)="navigateTo(link.route, link.id)" 
-               [title]="link.label">
-                <div class="icon-box">
-                    <i [class]="link.icon"></i>
-                </div>
-                <span class="nav-label">{{ link.label }}</span>
-            </a>
-        </nav>
-        
-        <div class="sidebar-bottom">
             <button class="logout-btn-icon" (click)="logoutUser()" title="Logout">
                 <i class="fas fa-sign-out-alt"></i>
                 <span class="nav-label">Logout</span>
             </button>
         </div>
+    </header>
+
+    <div class="mobile-menu-overlay" *ngIf="mobileMenuOpen()" (click)="closeMobileMenu()"></div>
+    <aside class="mobile-drawer" [class.open]="mobileMenuOpen()" aria-label="Mobile navigation">
+        <div class="drawer-header">
+            <h3>Menu</h3>
+            <button class="drawer-close-btn" (click)="closeMobileMenu()" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <nav class="mobile-drawer-nav">
+            <a *ngFor="let link of config.SIDEBAR_LINKS"
+               class="drawer-nav-item"
+               [class.active]="activeTab() === link.id"
+               (click)="navigateFromMobileMenu(link.route, link.id)"
+               [title]="link.label">
+                <span class="drawer-item-left">
+                    <i [class]="link.icon"></i>
+                    <span>{{ link.label }}</span>
+                </span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </nav>
     </aside>
 
     <!-- Main Content -->
@@ -55,11 +78,17 @@
         
         <!-- Dashboard View -->
         <div *ngIf="activeTab() === 'dashboard'" class="fade-in">
-            <div class="main-content-header">
-                <h1>Dashboard Overview</h1>
-                <p>Welcome back, {{ config.ADMIN_DETAILS.name }}</p>
+            <div class="main-content-header dashboard-header">
+                <div>
+                    <h1>Dashboard Overview</h1>
+                    <p>Welcome back, {{ config.ADMIN_DETAILS.name }}. Here's a quick snapshot of operations.</p>
+                </div>
+                <span class="status-pill">
+                    <i class="fas fa-circle"></i>
+                    System Healthy
+                </span>
             </div>
-            
+
             <div class="card-grid">
                 <div *ngFor="let card of config.ADMIN_CARDS" 
                     class="card" 
@@ -67,8 +96,11 @@
                     (click)="navigateTo(card.route, card.targetTab)">
                     
                     <div class="card-image-wrapper">
-                        <img [src]="'assets/' + card.iconImage" [alt]="card.title" 
-                             onerror="this.src='https://placehold.co/600x400/eef2f6/94a3b8?text=Image'">
+                        <img [src]="card.iconImage.startsWith('http') ? card.iconImage : 'assets/' + card.iconImage" [alt]="card.title" 
+                             onerror="this.src='assets/course.png'">
+                        <div class="card-top-row">
+                            <span class="card-chip">Admin Tool</span>
+                        </div>
                         <div class="card-overlay">
                             <h2>{{ card.title }}</h2>
                             <p>{{ card.subtitle }}</p>
@@ -78,6 +110,7 @@
                     <div class="card-action">
                         <button [ngClass]="'btn-' + card.colorClass">
                             {{ card.buttonText }}
+                            <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
@@ -173,10 +206,10 @@
                     <i class="fas fa-undo"></i>
                 </button>
 
-                <div style="flex-grow: 1;"></div>
+                <div class="filter-spacer"></div>
 
                 <!-- Delete Actions -->
-                <div class="delete-actions" style="display: flex; gap: 10px;">
+                <div class="delete-actions">
                     <!-- Show this button only when dates are selected -->
                     <button *ngIf="filterStartDate() && filterEndDate()" 
                             class="btn-danger-outline" 
@@ -227,7 +260,7 @@
                             </td>
                             <td class="text-muted">{{ inq.created_at | date:'mediumDate' }} <small>{{ inq.created_at | date:'shortTime' }}</small></td>
                             <td>
-                                <div style="display: flex; gap: 10px;">
+                                <div class="table-actions-row">
                                     <button class="btn-icon" title="Mark as Contacted" (click)="markAsContacted()">
                                         <i class="fas fa-check-circle text-success"></i>
                                     </button>
