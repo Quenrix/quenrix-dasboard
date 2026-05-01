@@ -28,10 +28,24 @@ import { SetupProfileComponent } from './setup-profile/setup-profile.component';
 import { TrainerDashboardComponent } from './trainer-dashboard/trainer-dashboard.component';
 import { GuestGuard } from './guest.guard';
 import { AuthGuard } from './auth.guard';
+import { CareersJobDetailComponent } from './careers-job-detail/careers-job-detail.component';
+import { AuthSignupComponent } from './auth/auth-signup.component';
+import { AuthLoginComponent } from './auth/auth-login.component';
 
 
 
 const routes: Routes = [
+  // Auth Routes
+  { 
+    path: 'auth/signup', 
+    component: AuthSignupComponent,
+    canActivate: [GuestGuard]
+  },
+  { 
+    path: 'auth/login', 
+    component: AuthLoginComponent,
+    canActivate: [GuestGuard]
+  },
   // Guest Routes (Accessible only if NOT logged in)
   { 
     path: '', 
@@ -43,6 +57,11 @@ const routes: Routes = [
     path: 'landing-page', 
     component: LandingPageComponent,
     canActivate: [GuestGuard] 
+  },
+  {
+    path: 'courses',
+    component: LandingPageComponent,
+    canActivate: [GuestGuard]
   },
   { 
     path: 'login', 
@@ -84,6 +103,7 @@ const routes: Routes = [
   {path:'upload-blog',component:UploadBlogComponent},
   {path:'upload-notes',component:UploadNotesComponent},
   {path:'careers',component:CareersComponent},
+  {path:'careers/job/:id',component:CareersJobDetailComponent},
   {path:'course-batch-management',component:CourseBatchManagementComponent},
   {path:'syntaxshare',component:SyntaxshareComponent},
   {path:'home',component:HomeComponent}

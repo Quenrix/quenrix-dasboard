@@ -55,8 +55,6 @@ import { SetupProfileComponent } from './setup-profile/setup-profile.component';
     NavbarComponent,
     SectionComponent,
     LoginFormComponent,
-    FooterComponent,
-    ChatbotComponent,
     ProfileSettingComponent,
     CreateCourseComponent,
     AboutCsmitComponent,
@@ -98,6 +96,8 @@ import { SetupProfileComponent } from './setup-profile/setup-profile.component';
     UploadBlogComponent,
     UploadNotesComponent,
     CareersComponent,
+    FooterComponent,
+    ChatbotComponent,
   ],
   providers: [
     {
