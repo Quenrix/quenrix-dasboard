@@ -1,3 +1,5 @@
+<app-mobile-menu></app-mobile-menu>
+
 <div class="job-detail-page">
   <section class="detail-shell" *ngIf="!isLoading && job; else fallbackState">
     <button type="button" class="back-btn" (click)="goBack()" title="Go back to Careers">
@@ -56,6 +58,14 @@
     <section class="fallback-card" *ngIf="!isLoading && !job">
       <h2>Job not found</h2>
       <p>This posting may have been removed or expired.</p>
+      <button type="button" class="back-btn fallback-back-btn" (click)="goBack()" title="Go back to Careers">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+        Back to Careers
+      </button>
     </section>
   </ng-template>
 </div>
+
+<app-footer></app-footer>

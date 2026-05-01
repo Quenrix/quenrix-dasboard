@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CareerService, Job } from '../services/careers.service';
 import { JobApplicationComponent } from '../job-application/job-application.component';
 import { MobileMenuComponent } from '../mobile-menu/mobile-menu.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-careers-job-detail',
   standalone: true,
-  imports: [CommonModule, JobApplicationComponent, MobileMenuComponent],
+  imports: [CommonModule, JobApplicationComponent, MobileMenuComponent, FooterComponent],
   templateUrl: './careers-job-detail.component.html',
   styleUrls: ['./careers-job-detail.component.css']
 })
@@ -37,7 +38,9 @@ export class CareersJobDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/careers']);
+    this.router.navigate(['/careers']).then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   startApply(): void {

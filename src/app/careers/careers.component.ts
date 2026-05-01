@@ -1,15 +1,16 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CareerService, Job } from '../services/careers.service';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MobileMenuComponent } from '../mobile-menu/mobile-menu.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-careers',
   standalone: true,
-  imports: [CommonModule, MobileMenuComponent],
+  imports: [CommonModule, MobileMenuComponent, FooterComponent],
   templateUrl: './careers.component.html',
   styleUrls: ['./careers.component.css']
 })
@@ -22,6 +23,7 @@ export class CareersComponent implements OnInit, OnDestroy {
   filteredJobs: Job[] = [];
   selectedDepartment: string = 'All';
   expandedDescriptions = new Set<string>();
+  @Input() showChrome = true;
 
   // Dynamic departments list based on available jobs + defaults
   departments: string[] = ['All', 'Training', 'Administration', 'Marketing', 'Development'];

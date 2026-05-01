@@ -192,6 +192,10 @@ h2 {
   margin-top: 0;
 }
 
+.fallback-back-btn {
+  margin: 1rem auto 0;
+}
+
 @media (max-width: 768px) {
   .job-detail-page {
     padding: 0.95rem 0.65rem 1.6rem;
